@@ -10,7 +10,7 @@ public:
     Pet(std::string name, int hp, int maxHp, int damage, int maxDamage);
     virtual ~Pet() {}
 
-    bool const getIsPresent() { return this->isPresent; }
+    bool getIsPresent() { return this->isPresent; }
 
     void setIsPresent(bool alive) { this->isPresent = alive; }
 
