@@ -12,8 +12,8 @@ public:
 	Character(std::string name, int hp, int maxHp, int damage, int maxDamage);
 	virtual ~Character();
 	
-	std::string const getName() { return this->name; }
-	int const getHP() { return this->hp; }
+	std::string getName() { return this->name; }
+	int getHP() { return this->hp; }
 
 	virtual int attack();
 	virtual void wasAttacked(int atck);
