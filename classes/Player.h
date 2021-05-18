@@ -7,7 +7,7 @@ public:
     Player(std::string name, int hp, int maxHp, int damage, int maxDamage, int stamina, int maxStamina);
     virtual ~Player();
 
-    int const getStamina() { return this->stamina; }
+    int getStamina() { return this->stamina; }
 
     void increaseStamina( int number);
     void increaseHealth(int number);
