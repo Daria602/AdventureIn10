@@ -16,8 +16,8 @@ public:
 	Edible(const Edible& go_);
 	virtual ~Edible();
 
-	std::string const getName() { return this->name; }
-	int const getReplenishStamina() { return this->replenishStamina; }
-	int const getReplenishHealth() { return this->replenishHealth; }
+	std::string getName() { return this->name; }
+	int getReplenishStamina() { return this->replenishStamina; }
+	int getReplenishHealth() { return this->replenishHealth; }
 
 };
