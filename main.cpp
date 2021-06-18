@@ -150,7 +150,7 @@ void inBossFight(Character &boss, Player &player, Inventory &inventory,Pet &pet)
 bool inRoom = true;
 int main()
 {
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	Game game;
 	Room rooms;
@@ -237,7 +237,7 @@ int main()
 					chance = player.run();
 					if (chance == 1)
 					{
-						Character* c;
+						//Character* c;
 						std::cout << "The " << boss.getName() << " is approaching." << std::endl;
 						inBossFight(boss, player, inventory,pet);
 						if (boss.getHP() > 0)
