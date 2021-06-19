@@ -143,8 +143,27 @@ void inBossFight(Character &boss, Player &player, Inventory &inventory,Pet &pet)
 		}
 	}
 }
+std::vector<Character> getAllMonsters()
+{
+	std::vector<Character> monsters;
+	Character mutant("Mutant", 3, 3, 0, 2), goblin("Goblin", 4, 4, 0, 2),
+		businessman("Businessman", 5, 5, 0, 1), evilMagician("Evil Magician", 6, 6, 0, 3);
+	monsters.push_back(mutant);
+	monsters.push_back(goblin);
+	monsters.push_back(businessman);
+	monsters.push_back(evilMagician);
+	return monsters;
+}
 
-
+std::vector<Edible> getAllEdible()
+{
+	std::vector<Edible> edibles;
+	Edible apple("Apple", 3, 3), caveCarrot("Cave carrot", 2, 2), pizza("Pizza", 4, 4);
+	edibles.push_back(apple);
+	edibles.push_back(caveCarrot);
+	edibles.push_back(pizza);
+	return edibles;
+}
 
 
 bool inRoom = true;
@@ -153,7 +172,19 @@ int main()
 	srand((unsigned int)time(NULL));
 
 	Game game;
-	Room rooms;
+	std::vector<Character> all_monsters = getAllMonsters();
+	std::vector<Edible> all_edible = getAllEdible();
+	std::vector<Room> all_rooms;
+	for (int i = 1; i <= 10; i++)
+	{
+		RoomBuilder rb;
+		int indexMonster = rand() % (all_monsters.size() - 1);
+		int indexEdible = rand() % (all_edible.size() - 2);
+		Room r = rb.indexRoom(i).monsterInRoom(all_monsters[indexMonster]).edibleInRoom(all_edible[indexEdible]).build();
+		all_rooms.push_back(r);
+	}
+
+
 	Inventory inventory;
 	Pet pet("Barsik", 5, 5, 1, 4);
 
@@ -166,47 +197,44 @@ int main()
 	std::cout << "Hello, " << player.getName() << "!" << std::endl;
 	std::cout << "The goal is to get to the treasure room in 10 days. \nEvery action you take will drain your stamina. \nAfter you rest, your stamina will be back to max, but the day count will increase.\n";
 
-	int ri = 0;
-
-	while (game.getRunning() && game.getDayCount()!=11 && ri != 10 && player.getHP() > 0)
+	int i = 0;
+	while (i < all_rooms.size() && game.getDayCount() <= 10 && player.getHP() > 0)
 	{
-		
-		ri = rooms.chooseRoom();
-		std::cout << "You enter the room number " << ri << "." << std::endl;
-
-		if (ri == 3)
+		Room room = all_rooms[i];
+		std::cout << "You enter the room number " << room.getRoomIndex() << "." << std::endl;
+		if (i == 3)
 		{
 			std::cout << "You see a cat. It seems to like you. You pet him and it decides to stick around." << std::endl;
 			pet.setIsPresent(true);
 		}
-
-		
-		
-		Character boss = rooms.chooseMonster();
+		if (room.getRoomIndex() == 10)
+		{
+			std::cout << "IT'S A TREASURE ROOM!\nCongratulations!!! You won!" << std::endl;
+			return 0;
+		}
+		Character boss = room.getMonster();
 		mainMenu(boss);
 		inRoom = true;
-
-
 		while (inRoom == true)
 		{
 			int answer;
 			std::cin >> answer;
-
 			switch (answer)
 			{
 				case 1:
 				{
-					if (ri > 3)
+					if (room.getRoomIndex() > 3)
 					{
 						pet.setIsPresent(true);
 					}
-					int answer2;
-					inBossFight(boss, player, inventory,pet);
+					
+					inBossFight(boss, player, inventory, pet);
 					if (boss.getHP() > 0)
 					{
 						return 0;
 					}
-					
+
+					int answer2;
 					std::cout << "Press 1 to continue to the next room.\nPress 2 to scope the room." << std::endl;
 					std::cin >> answer2;
 					if (answer2 == 1)
@@ -215,7 +243,7 @@ int main()
 					}
 					else
 					{
-						Edible eat = rooms.chooseEdible();
+						Edible eat = room.getEdible();
 
 						std::cout << "You found " << eat << "\nWould you like to add it to the inventory?\n1 - > yes\n2 - > no" << std::endl;
 						std::cin >> answer2;
@@ -227,8 +255,8 @@ int main()
 						}
 						inRoom = false;
 					}
-					
-					
+
+
 
 				}break;
 				case 2:
@@ -238,8 +266,8 @@ int main()
 					if (chance == 1)
 					{
 						//Character* c;
-						std::cout << "The " << boss.getName() << " is approaching." << std::endl;
-						inBossFight(boss, player, inventory,pet);
+						std::cout << "The " << boss.getName() << " is approaching. You raise your weapon." << std::endl;
+						inBossFight(boss, player, inventory, pet);
 						if (boss.getHP() > 0)
 						{
 							return 0;
@@ -271,15 +299,8 @@ int main()
 			game.incrementDayCount();
 		}
 		
-		
-	}
 
-	if (ri == 10)
-	{
-		std::cout << "IT'S A TREASURE ROOM!\nCongratulations!!! You won!" << std::endl;
-		return 0;
+		i++;
 	}
-
-	
 
 }
